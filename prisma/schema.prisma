@@ -31,35 +31,35 @@ enum UserRole {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  password      String
-  name          String
-  role          UserRole       @default(TEAM_MEMBER)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  
-  assignedTasks Task[]         @relation("AssignedTasks")
-  ownedProjects Project[]      @relation("OwnedProjects")
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(TEAM_MEMBER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignedTasks  Task[]          @relation("AssignedTasks")
+  ownedProjects  Project[]       @relation("OwnedProjects")
   projectMembers ProjectMember[]
-  notifications Notification[]
-  activities    ActivityLog[]
+  notifications  Notification[]
+  activities     ActivityLog[]
 }
 
 model Project {
-  id          String         @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
   description String?
   deadline    DateTime
-  status      ProjectStatus  @default(ACTIVE)
+  status      ProjectStatus @default(ACTIVE)
   ownerId     String
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  
-  owner       User           @relation("OwnedProjects", fields: [ownerId], references: [id])
-  members     ProjectMember[]
-  tasks       Task[]
-  activities  ActivityLog[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  owner      User            @relation("OwnedProjects", fields: [ownerId], references: [id])
+  members    ProjectMember[]
+  tasks      Task[]
+  activities ActivityLog[]
 }
 
 model ProjectMember {
@@ -67,10 +67,10 @@ model ProjectMember {
   projectId String
   userId    String
   joinedAt  DateTime @default(now())
-  
-  project   Project  @relation(fields: [projectId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  
+
+  project Project @relation(fields: [projectId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
   @@unique([projectId, userId])
 }
 
@@ -85,11 +85,11 @@ model Task {
   status      TaskStatus   @default(TODO)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  
-  project     Project      @relation(fields: [projectId], references: [id])
-  assignedUser User?       @relation("AssignedTasks", fields: [assignedTo], references: [id])
-  activities  ActivityLog[]
-  
+
+  project      Project       @relation(fields: [projectId], references: [id])
+  assignedUser User?         @relation("AssignedTasks", fields: [assignedTo], references: [id])
+  activities   ActivityLog[]
+
   @@unique([projectId, title])
 }
 
@@ -101,20 +101,20 @@ model Notification {
   type      String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
-  
-  user      User     @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model ActivityLog {
-  id          String   @id @default(cuid())
-  userId      String
-  action      String
-  details     String
-  projectId   String?
-  taskId      String?
-  createdAt   DateTime @default(now())
-  
-  user        User     @relation(fields: [userId], references: [id])
-  project     Project? @relation(fields: [projectId], references: [id])
-  task        Task?    @relation(fields: [taskId], references: [id])
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  details   String
+  projectId String?
+  taskId    String?
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id])
+  task    Task?    @relation(fields: [taskId], references: [id])
 }
