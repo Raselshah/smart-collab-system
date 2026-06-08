@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/app/components/ui/Button'
 import { formatDistanceToNow } from 'date-fns'
 import { Bell, CheckCheck } from 'lucide-react'
 import { useEffect, useState } from 'react'

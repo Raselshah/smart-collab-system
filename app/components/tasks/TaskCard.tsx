@@ -1,7 +1,7 @@
 'use client'
 
-import { Badge } from '@/components/ui/Badge'
-import { Checkbox } from '@/components/ui/Checkbox'
+import { Badge } from '@/app/components/ui/Badge'
+import { Checkbox } from '@/app/components/ui/Checkbox'
 import { format } from 'date-fns'
 import { Calendar, Flag, User } from 'lucide-react'
 
@@ -44,7 +44,7 @@ export function TaskCard({ task, onStatusChange }: TaskCardProps) {
       <div className="flex items-start gap-3">
         <Checkbox
           checked={task.status === 'COMPLETED'}
-          onCheckedChange={(checked) => {
+          onChange={(checked) => {
             if (checked) {
               onStatusChange(task.id, 'COMPLETED')
             } else {

@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
 
     if (!validation.success) {
       return NextResponse.json(
-        { success: false, error: validation.error.errors[0].message },
+        { success: false, error: validation.error.issues[0].message },
         { status: 400 },
       );
     }
@@ -83,16 +83,16 @@ export async function POST(req: NextRequest) {
         owner: {
           select: { id: true, name: true, email: true },
         },
+        tasks: true,
       },
     });
 
     // Log activity
-    await logActivity(
-      user.userId,
-      "PROJECT_CREATED",
-      `Created project "${project.name}"`,
-      project.id,
-    );
+    await logActivity({
+      userId: user.userId,
+      action: "PROJECT_CREATED",
+      details: `Created project "${project.name}"`,
+    });
 
     // Notify admin about new project
     const admins = await prisma.user.findMany({
@@ -100,12 +100,12 @@ export async function POST(req: NextRequest) {
     });
 
     for (const admin of admins) {
-      await createNotification(
-        admin.id,
-        "New Project Created",
-        `${user.email} created a new project: ${project.name}`,
-        "PROJECT_CREATED",
-      );
+      await createNotification({
+        userId: admin.id,
+        title: "New Project Created",
+        message: `${user.email} created a new project: ${project.name}`,
+        type: "PROJECT_CREATED",
+      });
     }
 
     return NextResponse.json({ success: true, data: project });

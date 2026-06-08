@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from '@/components/ui/Button'
-import { Select } from '@/components/ui/Select'
+import { Button } from '@/app/components/ui/Button'
+import { Select } from '@/app/components/ui/Select'
 import { Filter, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -100,7 +100,7 @@ export function TaskFilters({ filters, onFilterChange }: TaskFiltersProps) {
             onChange={(e) => handleFilterChange('assignedTo', e.target.value)}
           >
             <option value="">All Users</option>
-            {users.map(user => (
+            {users?.map(user => (
               <option key={user.id} value={user.id}>{user.name}</option>
             ))}
           </Select>

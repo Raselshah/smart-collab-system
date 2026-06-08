@@ -68,7 +68,7 @@ export default function TasksPage() {
 
   const handleStatusChange = async (taskId: string, newStatus: string) => {
     try {
-      const response = await fetch(`/api/tasks/${taskId}/status`, {
+      const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),

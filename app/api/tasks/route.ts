@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 
     if (!validation.success) {
       return NextResponse.json(
-        { success: false, error: validation.error.errors[0].message },
+        { success: false, error: validation.error.issues[0].message },
         { status: 400 },
       );
     }
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
         title: validation.data.title,
         description: validation.data.description,
         projectId: validation.data.projectId,
-        assignedTo: validation.data.assignedTo,
+        assignedTo: validation.data.assignedTo || null,
         dueDate: validation.data.dueDate,
         priority: validation.data.priority,
         status: validation.data.status,
@@ -137,22 +137,22 @@ export async function POST(req: NextRequest) {
     });
 
     // Log activity
-    await logActivity(
-      user.userId,
-      "TASK_CREATED",
-      `Created task "${task.title}" in project "${task.project.name}"`,
-      task.projectId,
-      task.id,
-    );
+    await logActivity({
+      userId: user.userId,
+      action: "TASK_CREATED",
+      details: `Created task "${task.title}" in project "${task.project.name}"`,
+
+      taskId: task.id,
+    });
 
     // Notify assigned user
     if (validation.data.assignedTo) {
-      await createNotification(
-        validation.data.assignedTo,
-        "New Task Assigned",
-        `You have been assigned to task: ${task.title}`,
-        "TASK_ASSIGNED",
-      );
+      await createNotification({
+        userId: validation.data.assignedTo,
+        title: "New Task Assigned",
+        message: `You have been assigned to task: ${task.title}`,
+        type: "TASK_ASSIGNED",
+      });
     }
 
     return NextResponse.json({ success: true, data: task });

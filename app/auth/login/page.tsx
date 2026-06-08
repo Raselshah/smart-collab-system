@@ -77,7 +77,7 @@ export default function LoginPage() {
       const result = await response.json()
       if (result.success) {
         toast.success(`Logged in as ${email.split('@')[0]} demo user!`)
-        router.push('/dashboard')
+        window.location.href = '/dashboard'
       } else {
         toast.error(result.error || 'Demo login failed')
       }

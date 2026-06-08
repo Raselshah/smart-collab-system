@@ -2,7 +2,13 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  cookies().delete("auth-token");
+  const cookieStore = await cookies();
+
+  cookieStore.delete({
+    name: "auth-token",
+    path: "/",
+  });
+
   return NextResponse.json({
     success: true,
     message: "Logged out successfully",
